@@ -51,7 +51,3 @@
         path: /home/cam/.zshrc
         create: yes
         line: 'source ~/powerlevel10k/powerlevel10k.zsh-theme'
-
-    - name: Source .zshrc to apply changes
-      become_user: cam
-      shell: source /home/cam/.zshrc
