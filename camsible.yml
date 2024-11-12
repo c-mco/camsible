@@ -39,11 +39,3 @@
           - python3-pip
           - neovim
         state: present
-
-- name: Run tasks as cam user
-  hosts: localhost
-  become: yes
-  become_user: cam
-  tasks:
-    - name: Ensure zsh is the default shell for cam
-      command: chsh -s /bin/zsh cam
