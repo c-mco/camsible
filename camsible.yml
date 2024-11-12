@@ -3,6 +3,15 @@
   hosts: localhost
   become: yes
   tasks:
+    - name: Create the 'cam' user
+      user:
+        name: cam
+        shell: /bin/bash
+        create_home: yes
+        groups: sudo
+        append: yes
+        shell: /bin/zsh
+
     - name: Update the package list
       apt:
         update_cache: yes
@@ -11,7 +20,7 @@
       apt:
         upgrade: dist
 
-    - name: Install stuff!
+    - name: Install essential packages
       apt:
         name: 
           - curl
@@ -25,12 +34,3 @@
           - neovim
         state: present
 
-#log the current user
-    - name: log the current user
-      debug:
-        msg: "Current user is {{ ansible_env.USER }}"
-        
-    - name: make zsh the default shell
-      user:
-        name: "{{ ansible_env.USER }}"
-        shell: /bin/zsh
