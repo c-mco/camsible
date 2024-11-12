@@ -8,7 +8,6 @@
         shell: /bin/zsh
         create_home: yes
         generate_ssh_key: true
-        group: cam
         groups: sudo
         append: yes
 
