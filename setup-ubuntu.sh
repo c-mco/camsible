@@ -1,5 +1,15 @@
 #!/bin/bash
 
+set -e
+
+# Function to handle errors
+error_exit() {
+  echo "Error on line $1"
+  exit 1
+}
+
+trap 'error_exit $LINENO' ERR
+
 # Update package list and install Ansible and Git
 sudo apt update
 sudo apt install -y ansible git
