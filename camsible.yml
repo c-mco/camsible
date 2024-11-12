@@ -13,7 +13,16 @@
 
     - name: Install stuff!
       apt:
-        name: curl, zsh, git, vim, tmux, htop, tree, python3-pip, neovim
+        name: 
+          - curl
+          - zsh
+          - git
+          - vim
+          - tmux
+          - htop
+          - tree
+          - python3-pip
+          - neovim
         state: present
 
     - name: make zsh the default shell
