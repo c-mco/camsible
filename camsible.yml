@@ -25,6 +25,11 @@
           - neovim
         state: present
 
+#log the current user
+    - name: log the current user
+      debug:
+        msg: "Current user is {{ ansible_env.USER }}"
+        
     - name: make zsh the default shell
       user:
         name: "{{ ansible_env.USER }}"
