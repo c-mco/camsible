@@ -1,0 +1,31 @@
+- name: Install Zsh
+  apt:
+    name: zsh
+    state: present
+  become: true
+
+- name: Set the default shell for the user
+  user:
+    name: "{{ ansible_env.SUDO_USER | default(ansible_env.USER) }}"
+    shell: /usr/bin/zsh
+  become: true
+
+- name: Install zplug
+  become: false
+  shell: curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
+
+- name: Configure zplug in .zshrc
+  become: false
+  lineinfile:
+    path: /home/{{ ansible_env.SUDO_USER | default(ansible_env.USER) }}/.zshrc
+    line: |
+      source ~/.zplug/init.zsh
+      zplug "zsh-users/zsh-autosuggestions"
+      zplug "zsh-users/zsh-syntax-highlighting"
+      zplug "zsh-users/zsh-completions"
+      zplug romkatv/powerlevel10k, as:theme, depth:1
+      zplug load
+      [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+    create: yes
+
+  

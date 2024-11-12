@@ -1,0 +1,21 @@
+- hosts: localhost 
+  become: true
+  roles:
+    - zsh
+    - node
+    - github-cli
+    - dotfiles
+  tasks:
+    - name: Install essential packages
+      apt:
+        name:
+          - build-essential
+          - git
+          - curl
+          - wget
+          - tmux
+          - stow
+          - neovim
+          - gnupg 
+        state: present
+        update_cache: yes
