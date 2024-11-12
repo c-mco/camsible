@@ -1,35 +1,17 @@
+# Use the official Ubuntu base image
 FROM ubuntu:latest
 
-# Install necessary packages
-RUN apt-get update && \
-    apt-get install -y \
-    ansible \
-    sudo \
-    curl \
-    git \
-    zsh \
-    && apt-get clean
+# Install necessary packages as root
+RUN apt update && apt install -y ansible git sudo
 
-# Create a non-root user
-RUN useradd -m -s /bin/zsh cam && echo "cam:password" | chpasswd && adduser cam sudo
+# Copy the setup script and playbook into the container
+COPY setup-ubuntu.sh .
 
-# Allow the ansible user to use sudo without a password
-RUN echo "cam ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+# Make the setup script executable
+RUN chmod +x ./setup-ubuntu.sh
 
-# Set the working directory
-WORKDIR /home/cam
+# Run the setup script during the build process
+RUN ./setup-ubuntu.sh
 
-# Copy the Ansible playbook and roles
-COPY . /home/cam/
-
-# Change ownership of the copied files
-RUN chown -R cam:cam /home/cam/
-
-# Add a custom prompt to .zshrc
-RUN echo 'PROMPT="%n@ansible-container %~ %# "' >> /home/cam/.zshrc
-
-# Switch to the non-root user
-USER cam
-
-# Run the Ansible playbook
-CMD ["ansible-playbook", "cams.yml"]
+# Set the default command to keep the container running
+CMD ["/bin/bash"]

@@ -1,0 +1,110 @@
+- name: Basic setup for camsible
+  hosts: localhost
+  tasks:
+    - name: Update the package list
+      become: yes
+      apt:
+        update_cache: yes
+
+    - name: Upgrade all packages to the latest version
+      become: yes
+      apt:
+        upgrade: dist
+
+    - name: Install essential packages
+      become: yes
+      become_method: sudo
+      apt:
+        name: 
+          - curl
+          - zsh
+          - git
+          - vim
+          - tmux
+          - htop
+          - tree
+          - python3-pip
+          - neovim
+          - stow
+        state: present
+
+    - name: install antidote
+      git:
+        repo: https://github.com/mattmc3/antidote.git 
+        dest: ~/.antidote
+
+
+    - name: Create ssh folder
+      file:
+        path: ~/.ssh
+        state: directory
+        mode: '0700'
+
+    - name: Copy encrypted SSH keys tarball
+      copy:
+        src: ssh_keys.tar.gz
+        dest: ~/ssh_keys.tar.gz
+        mode: '0600'
+
+    - name: Unpack SSH keys tarball
+      ansible.builtin.command:
+        cmd: tar xzf ~/ssh_keys.tar.gz -C ~/.ssh
+
+    - name: Set permissions for SSH keys
+      file:
+        path: ~/.ssh/id_ed25519
+        mode: '0600'
+
+    - name: Ensure known_hosts file has GitHub entry
+      known_hosts:
+        name: github.com
+        key: "{{ lookup('pipe', 'ssh-keyscan github.com') }}"
+
+    - name: Configure SSH to use the GitHub key
+      lineinfile:
+        path: ~/.ssh/config
+        create: yes
+        line: |
+          Host github.com
+            IdentityFile ~/.ssh/id_ed25519
+            User git
+
+    - name: Start ssh-agent and add SSH key
+      shell: |
+        eval $(ssh-agent -s)
+        ssh-add ~/.ssh/id_ed25519
+
+    - name: Clone dotfiles repository
+      git:
+        repo: git@github.com:c-mco/dotfiles.git
+        dest: ~/.dotfiles
+
+    - name: use stow to symlink dotfiles
+      shell: |
+          stow -t ~ -d ~/.dotfiles git nvim p10k zsh
+
+    - name: Clone powerlevel10k
+      git:
+        repo: https://github.com/romkatv/powerlevel10k.git
+        dest: ~/powerlevel10k
+
+    - name: Configure powerlevel10k in .zshrc
+      lineinfile:
+        path: ~/.zshrc
+        create: yes
+        line: 'source ~/powerlevel10k/powerlevel10k.zsh-theme'
+
+    - name: Create directories for vim-plug
+      file:
+        path: "~/.local/share/nvim/site/autoload"
+        state: directory
+        mode: '0755'
+
+    - name: install vim-plug
+      get_url:
+        url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        dest: "~/.local/share/nvim/site/autoload/plug.vim"
+        mode: '0644'
+
+    - name: Install neovim plugins
+      command: nvim +PlugInstall +qall
