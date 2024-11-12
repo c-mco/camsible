@@ -34,3 +34,7 @@
           - neovim
         state: present
 
+    - switch to the 'cam' user
+      become_user: cam
+      become_method: su
+      shell: /bin/zsh
