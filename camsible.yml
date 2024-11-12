@@ -55,5 +55,14 @@
     - name: Clone dotfiles repository
       become_user: cam
       git:
-        repo: https://github.com/yourusername/dotfiles.git
+        repo: https://github.com/c-mco/dotfiles.git
         dest: /home/cam/.dotfiles
+
+    - name: Install gnu stow
+      apt:
+        name: stow
+        state: present
+
+    - name: use stow to symlink dotfiles
+      become_user: cam
+      command: stow -t /home/cam -d /home/cam/.dotfiles zsh git vim tmux
