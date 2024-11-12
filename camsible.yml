@@ -51,3 +51,9 @@
         path: /home/cam/.zshrc
         create: yes
         line: 'source ~/powerlevel10k/powerlevel10k.zsh-theme'
+
+    - name: Clone dotfiles repository
+      become_user: cam
+      git:
+        repo: https://github.com/yourusername/dotfiles.git
+        dest: /home/cam/.dotfiles
