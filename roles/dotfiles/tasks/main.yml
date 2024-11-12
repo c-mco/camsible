@@ -11,9 +11,3 @@
     version: main
   become: false
 
-- name: Use stow to manage dotfiles
-  include_role:
-    name: stow
-  vars:
-    stow_base_dir: /home/{{ ansible_env.SUDO_USER | default(ansible_env.USER) }}/dotfiles
-    stow_target_dir: /home/{{ ansible_env.SUDO_USER | default(ansible_env.USER) }}
