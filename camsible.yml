@@ -65,4 +65,4 @@
 
     - name: use stow to symlink dotfiles
       become_user: cam
-      command: stow -t /home/cam -d /home/cam/.dotfiles zsh git vim tmux
+      command: stow -t /home/cam -d /home/cam/.dotfiles/
