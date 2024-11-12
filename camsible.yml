@@ -38,3 +38,20 @@
           - python3-pip
           - neovim
         state: present
+    
+    - name: Clone powerlevel10k
+      become_user: cam
+      git:
+        repo: https://github.com/romkatv/powerlevel10k.git
+        dest: /home/cam/powerlevel10k
+
+    - name: Configure powerlevel10k in .zshrc
+      become_user: cam
+      lineinfile:
+        path: /home/cam/.zshrc
+        create: yes
+        line: 'source ~/powerlevel10k/powerlevel10k.zsh-theme'
+
+    - name: Source .zshrc to apply changes
+      become_user: cam
+      shell: source /home/cam/.zshrc
