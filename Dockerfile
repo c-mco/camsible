@@ -10,6 +10,5 @@ COPY setup-ubuntu.sh .
 # Make the setup script executable
 RUN chmod +x setup-ubuntu.sh
 
-# Run the setup script
-RUN ./setup-ubuntu.sh
-
+# set the command to run the setup script
+CMD ["sh", "./setup-ubuntu.sh"]

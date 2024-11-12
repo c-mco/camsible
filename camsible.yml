@@ -1,4 +1,3 @@
-
 - name: Basic setup for camsible
   hosts: localhost
   become: yes
@@ -6,11 +5,12 @@
     - name: Create the 'cam' user
       user:
         name: cam
-        shell: /bin/bash
+        shell: /bin/zsh
         create_home: yes
+        generate_ssh_key: true
+        group: cam
         groups: sudo
         append: yes
-        shell: /bin/zsh
 
     - name: Add 'cam' user to sudoers
       lineinfile:
