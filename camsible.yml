@@ -1,4 +1,4 @@
----
+
 - name: Basic setup for camsible
   hosts: localhost
   become: yes
@@ -11,6 +11,12 @@
         groups: sudo
         append: yes
         shell: /bin/zsh
+
+    - name: Add 'cam' user to sudoers
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        line: 'cam ALL=(ALL) NOPASSWD:ALL'
 
     - name: Update the package list
       apt:
@@ -34,8 +40,10 @@
           - neovim
         state: present
 
-    - switch to the 'cam' user
-      become: no
-      become_user: cam
-      become_method: su
-      shell: /bin/zsh
+- name: Run tasks as cam user
+  hosts: localhost
+  become: yes
+  become_user: cam
+  tasks:
+    - name: Ensure zsh is the default shell for cam
+      command: chsh -s /bin/zsh cam
