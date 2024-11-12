@@ -1,31 +1,22 @@
----
-- name: Basic setup for camsible
-  hosts: localhost
-  become: yes
-  tasks:
-    - name: Update the package list
-      apt:
-        update_cache: yes
+#!/bin/bash
 
-    - name: Upgrade all packages to the latest version
-      apt:
-        upgrade: dist
+# Update package list and install Ansible and Git
+sudo apt update
+sudo apt install -y ansible git
 
-    - name: Install stuff!
-      apt:
-        name: 
-          - curl
-          - zsh
-          - git
-          - vim
-          - tmux
-          - htop
-          - tree
-          - python3-pip
-          - neovim
-        state: present
+# Change to the home directory
+cd ~
 
-    - name: make zsh the default shell
-      user:
-        name: "{{ ansible_facts.user_id }}"
-        shell: /bin/zsh
+# Check if the camsible repository already exists
+if [ -d "camsible" ]; then
+  # If it exists, pull the latest changes
+  cd camsible
+  git pull
+else
+  # If it doesn't exist, clone the repository
+  git clone -b start-from-scratch https://github.com/c-mco/camsible.git
+  cd camsible
+fi
+
+# Run the camsible playbook
+ansible-playbook camsible.yml
