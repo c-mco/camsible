@@ -11,7 +11,12 @@
       apt:
         upgrade: dist
 
-    - name: Install curl
+    - name: Install stuff!
       apt:
-        name: curl
+        name: curl, zsh, git, vim, tmux, htop, tree, python3-pip, neovim
         state: present
+
+    - name: make zsh the default shell
+      user:
+        name: "{{ ansible_user }}"
+        shell: /bin/zsh
