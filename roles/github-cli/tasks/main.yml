@@ -1,23 +1,24 @@
 - name: Ensure GPG is installed
-  ansible.builtin.apt:
+  apt:
     name: gnupg
     state: present
+    update_cache: true
 
 - name: Add GitHub CLI key
-  ansible.builtin.apt_key:
+  apt_key:
     url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
     state: present
     validate_certs: true
     keyring: /usr/share/keyrings/githubcli-archive-keyring.gpg
 
 - name: Add GitHub CLI repository
-  ansible.builtin.apt_repository:
+  apt_repository:
     repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"
     state: present
     filename: github-cli
 
 - name: Install gh package
-  ansible.builtin.apt:
+  apt:
     name: gh
     state: present
     update_cache: true
