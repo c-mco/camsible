@@ -1,0 +1,17 @@
+---
+- name: Basic setup for camsible
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Update the package list
+      apt:
+        update_cache: yes
+
+    - name: Upgrade all packages to the latest version
+      apt:
+        upgrade: dist
+
+    - name: Install curl
+      apt:
+        name: curl
+        state: present
