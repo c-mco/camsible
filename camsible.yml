@@ -27,6 +27,9 @@
           - stow
         state: present
 
+    - name: Set default shell to zsh
+      command: sudo chsh -s $(which zsh) $USER
+      
     - name: Clone powerlevel10k
       git:
         repo: https://github.com/romkatv/powerlevel10k.git
