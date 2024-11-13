@@ -1,8 +1,8 @@
 - name: Basic setup for camsible
   hosts: localhost
-  become: yes
   tasks:
     - name: Update the package list
+      become: yes
       apt:
         update_cache: yes
 
@@ -11,6 +11,7 @@
         upgrade: dist
 
     - name: Install essential packages
+      become: yes
       apt:
         name: 
           - curl
