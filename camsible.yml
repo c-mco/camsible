@@ -30,6 +30,11 @@
     - name: Set default shell to zsh
       command: sudo chsh -s $(which zsh) $USER
       
+    - name: iinstall antidote
+      git:
+        repo: https://github.com/mattmc3/antidote.git 
+        dest: ${ZDOTDIR:-$HOME}/antidote
+
     - name: Clone powerlevel10k
       git:
         repo: https://github.com/romkatv/powerlevel10k.git
