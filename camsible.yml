@@ -7,7 +7,6 @@
         name: cam
         shell: /bin/zsh
         create_home: yes
-        generate_ssh_key: true
         groups: sudo
         append: yes
 
@@ -37,8 +36,9 @@
           - tree
           - python3-pip
           - neovim
+          - stow
         state: present
-    
+
     - name: Clone powerlevel10k
       become_user: cam
       git:
@@ -52,17 +52,45 @@
         create: yes
         line: 'source ~/powerlevel10k/powerlevel10k.zsh-theme'
 
+    - name: Copy encrypted SSH keys tarball
+      copy:
+        src: ssh_keys.tar.gz
+        dest: /home/cam/ssh_keys.tar.gz
+        owner: cam
+        group: cam
+        mode: '0600'
+
+    - name: Decrypt SSH keys tarball
+      become_user: cam
+      ansible.builtin.command:
+        cmd: ansible-vault decrypt /home/cam/ssh_keys.tar.gz
+
+    - name: Unpack SSH keys tarball
+      become_user: cam
+      ansible.builtin.command:
+        cmd: tar xzf /home/cam/ssh_keys.tar.gz -C /home/cam/.ssh
+
     - name: Clone dotfiles repository
       become_user: cam
       git:
         repo: https://github.com/c-mco/dotfiles.git
         dest: /home/cam/.dotfiles
 
-    - name: Install gnu stow
-      apt:
-        name: stow
-        state: present
-
     - name: use stow to symlink dotfiles
       become_user: cam
-      command: stow -t /home/cam -d /home/cam/.dotfiles/
+      shell: |
+        for dir in /home/cam/.dotfiles/*/; do
+          stow -t /home/cam -d /home/cam/.dotfiles "$(basename "$dir")"
+        done
+
+    - name: install vim-plug
+      become_user: cam
+      get_url:
+        url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        dest: "{{ lookup('env', 'XDG_DATA_HOME') | default(ansible_env.HOME + '/.local/share') }}/nvim/site/autoload/plug.vim"
+        mode: '0644'
+        create_directories: yes
+
+    - name: Install neovim plugins
+      become_user: cam
+      command: nvim +PlugInstall +qall
