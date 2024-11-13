@@ -75,7 +75,7 @@
       become_user: cam
       git:
         repo: https://github.com/mattmc3/antidote.git 
-        dest: ${ZDOTDIR:-~}/.antidote
+        dest: "/home/cam/.antidote"
         depth: 1
 
     - name: Create directories for vim-plug
