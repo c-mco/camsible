@@ -30,6 +30,7 @@ fi
 
 # Prompt for the Ansible Vault password
 read -sp 'Enter Ansible Vault password: ' VAULT_PASS
+echo
 
 # Run the camsible playbook
 ansible-playbook camsible.yml --vault-password-file <(echo "$VAULT_PASS")
