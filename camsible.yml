@@ -45,6 +45,14 @@
         repo: https://github.com/romkatv/powerlevel10k.git
         dest: /home/cam/powerlevel10k
 
+    - name: Create ssh folder
+      file:
+        path: /home/cam/.ssh
+        state: directory
+        owner: cam
+        group: cam
+        mode: 0700
+
     - name: Copy encrypted SSH keys tarball
       copy:
         src: ssh_keys.tar.gz
