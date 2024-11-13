@@ -37,38 +37,32 @@
         line: 'source ~/powerlevel10k/powerlevel10k.zsh-theme'
 
     - name: Create ssh folder
-      become_user: "{{ ansible_user }}"
       file:
         path: ~/.ssh
         state: directory
         mode: '0700'
 
     - name: Copy encrypted SSH keys tarball
-      become_user: "{{ ansible_user }}"
       copy:
         src: ssh_keys.tar.gz
         dest: ~/ssh_keys.tar.gz
         mode: '0600'
 
     - name: Unpack SSH keys tarball
-      become_user: "{{ ansible_user }}"
       ansible.builtin.command:
         cmd: tar xzf ~/ssh_keys.tar.gz -C ~/.ssh
 
     - name: Set permissions for SSH keys
-      become_user: "{{ ansible_user }}"
       file:
         path: ~/.ssh/id_rsa
         mode: '0600'
 
     - name: Ensure known_hosts file has GitHub entry
-      become_user: "{{ ansible_user }}"
       known_hosts:
         name: github.com
         key: "{{ lookup('pipe', 'ssh-keyscan github.com') }}"
 
     - name: Configure SSH to use the GitHub key
-      become_user: "{{ ansible_user }}"
       lineinfile:
         path: ~/.ssh/config
         create: yes
@@ -78,32 +72,27 @@
             User git
 
     - name: Clone dotfiles repository
-      become_user: "{{ ansible_user }}"
       git:
         repo: git@github.com:c-mco/dotfiles.git
         dest: ~/.dotfiles
 
     - name: use stow to symlink dotfiles
-      become_user: "{{ ansible_user }}"
       shell: |
         for dir in ~/.dotfiles/*/; do
           stow -t ~ -d ~/.dotfiles "$(basename "$dir")"
         done
 
     - name: Create directories for vim-plug
-      become_user: "{{ ansible_user }}"
       file:
         path: "{{ lookup('env', 'XDG_DATA_HOME') | default(ansible_env.HOME + '/.local/share') }}/nvim/site/autoload"
         state: directory
         mode: '0755'
 
     - name: install vim-plug
-      become_user: "{{ ansible_user }}"
       get_url:
         url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
         dest: "{{ lookup('env', 'XDG_DATA_HOME') | default(ansible_env.HOME + '/.local/share') }}/nvim/site/autoload/plug.vim"
         mode: '0644'
 
     - name: Install neovim plugins
-      become_user: "{{ ansible_user }}"
       command: nvim +PlugInstall +qall
