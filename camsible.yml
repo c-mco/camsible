@@ -51,7 +51,7 @@
         state: directory
         owner: cam
         group: cam
-        mode: 0700
+        mode: '0700'
 
     - name: Copy encrypted SSH keys tarball
       copy:
