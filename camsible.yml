@@ -69,7 +69,7 @@
     - name: Clone dotfiles repository
       become_user: cam
       git:
-        repo: https://github.com/c-mco/dotfiles.git
+        repo: git@github.com:c-mco/dotfiles.git
         dest: /home/cam/.dotfiles
 
     - name: use stow to symlink dotfiles
