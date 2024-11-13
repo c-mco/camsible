@@ -33,16 +33,6 @@
         repo: https://github.com/mattmc3/antidote.git 
         dest: ~/.antidote
 
-    - name: Clone powerlevel10k
-      git:
-        repo: https://github.com/romkatv/powerlevel10k.git
-        dest: ~/powerlevel10k
-
-    - name: Configure powerlevel10k in .zshrc
-      lineinfile:
-        path: ~/.zshrc
-        create: yes
-        line: 'source ~/powerlevel10k/powerlevel10k.zsh-theme'
 
     - name: Create ssh folder
       file:
@@ -92,6 +82,17 @@
     - name: use stow to symlink dotfiles
       shell: |
           stow -t ~ -d ~/.dotfiles git nvim p10k zsh
+
+    - name: Clone powerlevel10k
+      git:
+        repo: https://github.com/romkatv/powerlevel10k.git
+        dest: ~/powerlevel10k
+
+    - name: Configure powerlevel10k in .zshrc
+      lineinfile:
+        path: ~/.zshrc
+        create: yes
+        line: 'source ~/powerlevel10k/powerlevel10k.zsh-theme'
 
     - name: Create directories for vim-plug
       file:
