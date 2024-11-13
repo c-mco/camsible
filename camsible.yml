@@ -60,11 +60,6 @@
         group: cam
         mode: '0600'
 
-    - name: Decrypt SSH keys tarball
-      become_user: cam
-      ansible.builtin.command:
-        cmd: ansible-vault decrypt /home/cam/ssh_keys.tar.gz
-
     - name: Unpack SSH keys tarball
       become_user: cam
       ansible.builtin.command:
