@@ -71,6 +71,11 @@
             IdentityFile ~/.ssh/id_rsa
             User git
 
+    - name: Start ssh-agent and add SSH key
+      shell: |
+        eval $(ssh-agent -s)
+        ssh-add ~/.ssh/id_rsa
+
     - name: Clone dotfiles repository
       git:
         repo: git@github.com:c-mco/dotfiles.git
