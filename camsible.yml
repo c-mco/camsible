@@ -72,11 +72,11 @@
         dest: /home/cam/.dotfiles
 
     - name: use stow to symlink dotfiles
+      become: yes
       become_user: cam
-      shell: |
-        for dir in /home/cam/.dotfiles/*/; do
-          stow -t /home/cam -d /home/cam/.dotfiles "$(basename "$dir")"
-        done
+      command: stow -t ~ git nvim p10k zsh
+      args:
+        chdir: ~/.dotfiles
 
     - name: install vim-plug
       become_user: cam
