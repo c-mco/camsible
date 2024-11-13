@@ -83,9 +83,7 @@
 
     - name: use stow to symlink dotfiles
       shell: |
-        for dir in ~/.dotfiles/*/; do
-          stow -t ~ -d ~/.dotfiles "$(basename "$dir")"
-        done
+          stow -t ~ -d ~/.dotfiles git nvim p10k zsh
 
     - name: Create directories for vim-plug
       file:
