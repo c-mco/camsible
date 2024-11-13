@@ -28,13 +28,10 @@
           - stow
         state: present
 
-    - name: Set default shell to zsh
-      command: chsh -s $(which zsh) $USER
-      
-    - name: iinstall antidote
+    - name: install antidote
       git:
         repo: https://github.com/mattmc3/antidote.git 
-        dest: ${ZDOTDIR:-$HOME}/antidote
+        dest: ~/.antidote
 
     - name: Clone powerlevel10k
       git:
