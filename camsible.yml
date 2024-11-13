@@ -54,7 +54,7 @@
 
     - name: Set permissions for SSH keys
       file:
-        path: ~/.ssh/id_rsa
+        path: ~/.ssh/id_ed25519
         mode: '0600'
 
     - name: Ensure known_hosts file has GitHub entry
@@ -68,13 +68,13 @@
         create: yes
         line: |
           Host github.com
-            IdentityFile ~/.ssh/id_rsa
+            IdentityFile ~/.ssh/id_ed25519
             User git
 
     - name: Start ssh-agent and add SSH key
       shell: |
         eval $(ssh-agent -s)
-        ssh-add ~/.ssh/id_rsa
+        ssh-add ~/.ssh/id_ed25519
 
     - name: Clone dotfiles repository
       git:
