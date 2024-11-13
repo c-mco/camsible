@@ -13,6 +13,7 @@
 
     - name: Install essential packages
       become: yes
+      become_method: sudo
       apt:
         name: 
           - curl
@@ -28,7 +29,7 @@
         state: present
 
     - name: Set default shell to zsh
-      command: sudo chsh -s $(which zsh) $USER
+      command: chsh -s $(which zsh) $USER
       
     - name: iinstall antidote
       git:
