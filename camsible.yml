@@ -45,13 +45,6 @@
         repo: https://github.com/romkatv/powerlevel10k.git
         dest: /home/cam/powerlevel10k
 
-    - name: Configure powerlevel10k in .zshrc
-      become_user: cam
-      lineinfile:
-        path: /home/cam/.zshrc
-        create: yes
-        line: 'source ~/powerlevel10k/powerlevel10k.zsh-theme'
-
     - name: Copy encrypted SSH keys tarball
       copy:
         src: ssh_keys.tar.gz
@@ -78,14 +71,16 @@
       args:
         chdir: ~/.dotfiles
 
+    - name: Create directories for vim-plug
+      become_user: cam
+      file:
+        path: "/home/cam/.local/share/nvim/site/autoload"
+        state: directory
+        mode: '0755'
+
     - name: install vim-plug
       become_user: cam
       get_url:
         url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-        dest: "{{ lookup('env', 'XDG_DATA_HOME') | default(ansible_env.HOME + '/.local/share') }}/nvim/site/autoload/plug.vim"
+        dest: "/home/cam/.local/share/nvim/site/autoload/plug.vim"
         mode: '0644'
-        create_directories: yes
-
-    - name: Install neovim plugins
-      become_user: cam
-      command: nvim +PlugInstall +qall
