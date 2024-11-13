@@ -28,5 +28,8 @@ else
   cd camsible
 fi
 
+# Prompt for the Ansible Vault password
+read -sp 'Enter Ansible Vault password: ' VAULT_PASS
+
 # Run the camsible playbook
-ansible-playbook camsible.yml --ask-vault-pass
+ansible-playbook camsible.yml --vault-password-file <(echo "$VAULT_PASS")
