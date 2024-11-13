@@ -2,20 +2,6 @@
   hosts: localhost
   become: yes
   tasks:
-    - name: Create the 'cam' user
-      user:
-        name: cam
-        shell: /bin/zsh
-        create_home: yes
-        groups: sudo
-        append: yes
-
-    - name: Add 'cam' user to sudoers
-      lineinfile:
-        path: /etc/sudoers
-        state: present
-        line: 'cam ALL=(ALL) NOPASSWD:ALL'
-
     - name: Update the package list
       apt:
         update_cache: yes
@@ -40,64 +26,78 @@
         state: present
 
     - name: Clone powerlevel10k
-      become_user: cam
       git:
         repo: https://github.com/romkatv/powerlevel10k.git
-        dest: /home/cam/powerlevel10k
+        dest: ~/powerlevel10k
+
+    - name: Configure powerlevel10k in .zshrc
+      lineinfile:
+        path: ~/.zshrc
+        create: yes
+        line: 'source ~/powerlevel10k/powerlevel10k.zsh-theme'
 
     - name: Create ssh folder
       file:
-        path: /home/cam/.ssh
+        path: ~/.ssh
         state: directory
-        owner: cam
-        group: cam
         mode: '0700'
 
     - name: Copy encrypted SSH keys tarball
       copy:
         src: ssh_keys.tar.gz
-        dest: /home/cam/ssh_keys.tar.gz
-        owner: cam
-        group: cam
+        dest: ~/ssh_keys.tar.gz
         mode: '0600'
 
     - name: Unpack SSH keys tarball
-      become_user: cam
       ansible.builtin.command:
-        cmd: tar xzf /home/cam/ssh_keys.tar.gz -C /home/cam/.ssh
+        cmd: tar xzf ~/ssh_keys.tar.gz -C ~/.ssh
+
+    - name: Set permissions for SSH keys
+      file:
+        path: ~/.ssh/id_rsa
+        mode: '0600'
+
+    - name: Ensure known_hosts file has GitHub entry
+      known_hosts:
+        name: github.com
+        key: "{{ lookup('pipe', 'ssh-keyscan github.com') }}"
+
+    - name: Configure SSH to use the GitHub key
+      lineinfile:
+        path: ~/.ssh/config
+        create: yes
+        line: |
+          Host github.com
+            IdentityFile ~/.ssh/id_rsa
+            User git
+
+    - name: Add SSH key to the agent
+      ansible.builtin.command:
+        cmd: ssh-add ~/.ssh/id_rsa
+      ignore_errors: yes
 
     - name: Clone dotfiles repository
-      become_user: cam
       git:
         repo: git@github.com:c-mco/dotfiles.git
-        dest: /home/cam/.dotfiles
+        dest: ~/.dotfiles
 
     - name: use stow to symlink dotfiles
-      become: yes
-      become_user: cam
-      command: stow -t ~ git nvim p10k zsh
-      args:
-        chdir: ~/.dotfiles
-    
-    - name: install antidote
-      become_user: cam
-      git:
-        repo: https://github.com/mattmc3/antidote.git 
-        dest: "/home/cam/.antidote"
-        depth: 1
+      shell: |
+        for dir in ~/.dotfiles/*/; do
+          stow -t ~ -d ~/.dotfiles "$(basename "$dir")"
+        done
 
     - name: Create directories for vim-plug
-      become_user: cam
       file:
-        path: "/home/cam/.local/share/nvim/site/autoload"
+        path: "{{ lookup('env', 'XDG_DATA_HOME') | default(ansible_env.HOME + '/.local/share') }}/nvim/site/autoload"
         state: directory
         mode: '0755'
 
     - name: install vim-plug
-      become_user: cam
       get_url:
         url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-        dest: "/home/cam/.local/share/nvim/site/autoload/plug.vim"
+        dest: "{{ lookup('env', 'XDG_DATA_HOME') | default(ansible_env.HOME + '/.local/share') }}/nvim/site/autoload/plug.vim"
         mode: '0644'
 
-    
+    - name: Install neovim plugins
+      command: nvim +PlugInstall +qall
