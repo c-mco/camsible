@@ -29,4 +29,4 @@ else
 fi
 
 # Run the camsible playbook
-ansible-playbook camsible.yml
+ansible-playbook camsible.yml --ask-vault-pass
