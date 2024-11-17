@@ -73,9 +73,8 @@
       shell: |
         eval $(ssh-agent -s)
         ssh-add ~/.ssh/id_ed25519
-    
+
     - name: set zsh as default shell for original user
-      become: yes
       user:
         name: "{{ ansible_env.SUDO_USER | default(ansible_user_id) }}"
         shell: /bin/zsh
@@ -110,6 +109,13 @@
       git:
         repo: https://github.com/wbthomason/packer.nvim
         dest: "~/.local/share/nvim/site/pack/packer/start/packer.nvim"
+
+    - name: Ensure packpath is set correctly
+      lineinfile:
+        path: ~/.config/nvim/init.lua
+        create: yes
+        line: |
+          vim.cmd [[set packpath+=~/.local/share/nvim/site]]
 
     - name: Install neovim plugins with packer
       shell: |
