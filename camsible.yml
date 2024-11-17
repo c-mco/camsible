@@ -100,17 +100,17 @@
         create: yes
         line: "source ~/powerlevel10k/powerlevel10k.zsh-theme"
 
-    - name: Create directories for vim-plug
+    - name: Create directories for packer
       file:
-        path: "~/.local/share/nvim/site/autoload"
+        path: "~/.local/share/nvim/site/pack/packer/start"
         state: directory
         mode: "0755"
 
-    - name: install vim-plug
-      get_url:
-        url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-        dest: "~/.local/share/nvim/site/autoload/plug.vim"
-        mode: "0644"
+    - name: Install packer.nvim
+      git:
+        repo: https://github.com/wbthomason/packer.nvim
+        dest: "~/.local/share/nvim/site/pack/packer/start/packer.nvim"
 
-    - name: Install neovim plugins
-      command: nvim +PlugInstall +qall
+    - name: Install neovim plugins with packer
+      shell: |
+        nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
