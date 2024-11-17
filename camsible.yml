@@ -15,7 +15,7 @@
       become: yes
       become_method: sudo
       apt:
-        name: 
+        name:
           - curl
           - zsh
           - git
@@ -30,9 +30,8 @@
 
     - name: install antidote
       git:
-        repo: https://github.com/mattmc3/antidote.git 
+        repo: https://github.com/mattmc3/antidote.git
         dest: ~/.antidote
-
 
     - name: Create ssh folder
       file:
@@ -81,7 +80,7 @@
 
     - name: use stow to symlink dotfiles
       shell: |
-          stow -t ~ -d ~/.dotfiles git nvim p10k zsh
+        stow -t ~ -d ~/.dotfiles git nvim p10k zsh
 
     - name: Clone powerlevel10k
       git:
@@ -94,16 +93,20 @@
         create: yes
         line: 'source ~/powerlevel10k/powerlevel10k.zsh-theme'
 
+    - name: Source .zshrc
+      shell: |
+        source ~/.zshrc
+
     - name: Create directories for vim-plug
       file:
-        path: "~/.local/share/nvim/site/autoload"
+        path: '~/.local/share/nvim/site/autoload'
         state: directory
         mode: '0755'
 
     - name: install vim-plug
       get_url:
         url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-        dest: "~/.local/share/nvim/site/autoload/plug.vim"
+        dest: '~/.local/share/nvim/site/autoload/plug.vim'
         mode: '0644'
 
     - name: Install neovim plugins
