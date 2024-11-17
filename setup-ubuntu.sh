@@ -15,7 +15,7 @@ if [ -d "camsible" ]; then
 else
   # If it doesn't exist, clone the repository
   echo "Cloning the camsible repository..."
-  git clone -b start-from-scratch https://github.com/c-mco/camsible.git
+  git clone https://github.com/c-mco/camsible.git
   cd camsible
 fi
 
