@@ -75,8 +75,8 @@
         ssh-add ~/.ssh/id_ed25519
     
     - name: set zsh as default shell for original user
+      become: yes
       user:
-        become: yes
         name: "{{ ansible_env.SUDO_USER | default(ansible_user_id) }}"
         shell: /bin/zsh
 
