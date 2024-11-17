@@ -93,10 +93,6 @@
         create: yes
         line: 'source ~/powerlevel10k/powerlevel10k.zsh-theme'
 
-    - name: Source .zshrc
-      shell: |
-        source ~/.zshrc
-
     - name: Create directories for vim-plug
       file:
         path: '~/.local/share/nvim/site/autoload'
