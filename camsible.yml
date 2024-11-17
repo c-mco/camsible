@@ -74,7 +74,7 @@
 
     - name: setup git
       shell: |
-        gh auth --setup-git
+        gh auth setup-git
 
     - name: Clone dotfiles repository
       git:
