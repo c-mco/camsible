@@ -2,10 +2,17 @@
 FROM ubuntu:latest
 
 # Install necessary packages as root
-RUN apt update && apt install -y ansible git sudo
+RUN apt update && apt install -y ansible git sudo zsh
+
+# Create a new user named "camsible" and add it to the sudo group
+RUN useradd -m -s /usr/bin/zsh camsible && echo "camsible ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# Switch to the new user
+USER camsible
+WORKDIR /home/camsible
 
 # Copy the setup script and playbook into the container
-COPY setup-ubuntu.sh .
+COPY --chown=camsible:camsible setup-ubuntu.sh .
 
 # Make the setup script executable
 RUN chmod +x ./setup-ubuntu.sh
@@ -14,4 +21,4 @@ RUN chmod +x ./setup-ubuntu.sh
 RUN ./setup-ubuntu.sh
 
 # Set the default command to keep the container running
-CMD ["/bin/bash"]
+CMD ["/usr/bin/zsh"]
