@@ -76,6 +76,7 @@
     
     - name: set zsh as default shell for original user
       user:
+        become: yes
         name: "{{ ansible_env.SUDO_USER | default(ansible_user_id) }}"
         shell: /bin/zsh
 
