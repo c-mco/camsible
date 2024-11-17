@@ -38,13 +38,13 @@
       file:
         path: ~/.ssh
         state: directory
-        mode: '0700'
+        mode: "0700"
 
     - name: Copy encrypted SSH keys tarball
       copy:
         src: ssh_keys.tar.gz
         dest: ~/ssh_keys.tar.gz
-        mode: '0600'
+        mode: "0600"
 
     - name: Unpack SSH keys tarball
       ansible.builtin.command:
@@ -53,8 +53,8 @@
     - name: Set permissions for SSH keys
       file:
         path: ~/.ssh/id_ed25519
-        mode: '0600'
-        
+        mode: "0600"
+
     - name: Ensure known_hosts file has GitHub entry
       known_hosts:
         name: github.com
@@ -73,11 +73,11 @@
       shell: |
         eval $(ssh-agent -s)
         ssh-add ~/.ssh/id_ed25519
-        
-
-    - name: setup git
-      shell: |
-        gh auth setup-git
+    
+    - name: set zsh as default shell for original user
+      user:
+        name: "{{ ansible_env.SUDO_USER }}"
+        shell: /bin/zsh
 
     - name: Clone dotfiles repository
       git:
@@ -97,19 +97,19 @@
       lineinfile:
         path: ~/.zshrc
         create: yes
-        line: 'source ~/powerlevel10k/powerlevel10k.zsh-theme'
+        line: "source ~/powerlevel10k/powerlevel10k.zsh-theme"
 
     - name: Create directories for vim-plug
       file:
-        path: '~/.local/share/nvim/site/autoload'
+        path: "~/.local/share/nvim/site/autoload"
         state: directory
-        mode: '0755'
+        mode: "0755"
 
     - name: install vim-plug
       get_url:
         url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-        dest: '~/.local/share/nvim/site/autoload/plug.vim'
-        mode: '0644'
+        dest: "~/.local/share/nvim/site/autoload/plug.vim"
+        mode: "0644"
 
     - name: Install neovim plugins
       command: nvim +PlugInstall +qall
