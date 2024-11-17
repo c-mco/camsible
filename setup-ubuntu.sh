@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Prompt the user for the Ansible Vault password
-read -sp 'Enter Ansible Vault password: ' VAULT_PASS
-echo
 
 # Update package list and install Ansible and Git
 sudo apt update
@@ -26,6 +23,6 @@ fi
 
 # Run the camsible playbook
 echo "Running the camsible playbook..."
-ansible-playbook camsible.yml --vault-password-file <(echo $VAULT_PASS)
+ansible-playbook camsible.yml --ask-vault-pass
 
 echo "Setup complete."
