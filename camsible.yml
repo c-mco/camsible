@@ -53,6 +53,8 @@
     - name: Set permissions for SSH keys
       file:
         path: ~/.ssh/id_ed25519
+        mode: '0600'
+        
     - name: Ensure known_hosts file has GitHub entry
       known_hosts:
         name: github.com
@@ -71,6 +73,7 @@
       shell: |
         eval $(ssh-agent -s)
         ssh-add ~/.ssh/id_ed25519
+        
 
     - name: setup git
       shell: |
