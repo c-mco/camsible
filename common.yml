@@ -1,0 +1,4 @@
+- name: Basic setup for camsible
+  hosts: localhost
+  roles:
+    - common

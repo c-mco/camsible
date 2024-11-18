@@ -12,6 +12,8 @@
   become: yes
   apt:
     name:
+      - build-essential
+      - unzip
       - curl
       - zsh
       - git

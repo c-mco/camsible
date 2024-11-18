@@ -11,10 +11,4 @@
 
 - name: use stow to symlink dotfiles
   shell: |
-    stow -t ~ -d ~/.dotfiles git nvim p10k zsh
-
-- name: Clone powerlevel10k
-  git:
-    repo: https://github.com/romkatv/powerlevel10k.git
-    dest: ~/powerlevel10k
-
+    stow -t ~ -d ~/.dotfiles git nvim p10k zsh gh poshthemes 
