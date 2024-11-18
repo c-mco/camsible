@@ -1,15 +1,15 @@
 - name: Update the package list
-  become: yes
+  become: true
   apt:
     update_cache: yes
 
 - name: Upgrade all packages to the latest version
-  become: yes
+  become: true
   apt:
     upgrade: dist
 
 - name: Install essential packages
-  become: yes
+  become: true
   apt:
     name:
       - build-essential
@@ -27,7 +27,19 @@
       - stow
     state: present
 
-- name: install antidote
-  git:
-    repo: https://github.com/mattmc3/antidote.git
-    dest: ~/.antidote
+- name: Create user bin dir
+  become: true
+  become_user: "{{ ansible_env.SUDO_USER | default(ansible_user_id) }}"
+  file:
+    path: ~/.local/bin
+    state: directory
+    mode: "0755"
+
+- name: Add user bin dir to PATH
+  become: true
+  become_user: "{{ ansible_env.SUDO_USER | default(ansible_user_id) }}"
+  lineinfile:
+    path: ~/.profile
+    line: 'export PATH="$HOME/.local/bin:$PATH"'
+    create: yes
+

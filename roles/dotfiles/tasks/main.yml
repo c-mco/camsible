@@ -12,3 +12,7 @@
 - name: use stow to symlink dotfiles
   shell: |
     stow -t ~ -d ~/.dotfiles git nvim p10k zsh gh poshthemes 
+
+- name: install Oh My Posh
+  shell: |
+    curl -s https://ohmyposh.dev/install.sh | bash -s
