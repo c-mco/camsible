@@ -35,11 +35,9 @@
     state: directory
     mode: "0755"
 
-- name: Add user bin dir to PATH
+- name: install antidote
   become: true
   become_user: "{{ ansible_env.SUDO_USER | default(ansible_user_id) }}"
-  lineinfile:
-    path: ~/.profile
-    line: 'export PATH="$HOME/.local/bin:$PATH"'
-    create: yes
-
+  git:
+    repo: https://github.com/mattmc3/antidote.git
+    dest: ~/.antidote
