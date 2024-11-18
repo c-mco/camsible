@@ -1,0 +1,31 @@
+- name: Update the package list
+  become: yes
+  apt:
+    update_cache: yes
+
+- name: Upgrade all packages to the latest version
+  become: yes
+  apt:
+    upgrade: dist
+
+- name: Install essential packages
+  become: yes
+  apt:
+    name:
+      - curl
+      - zsh
+      - git
+      - gh
+      - vim
+      - tmux
+      - htop
+      - tree
+      - python3-pip
+      - neovim
+      - stow
+    state: present
+
+- name: install antidote
+  git:
+    repo: https://github.com/mattmc3/antidote.git
+    dest: ~/.antidote

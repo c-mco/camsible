@@ -1,0 +1,20 @@
+- name: set zsh as default shell for original user
+  become: yes
+  user:
+    name: "{{ ansible_env.SUDO_USER | default(ansible_user_id) }}"
+    shell: /bin/zsh
+
+- name: Clone dotfiles repository
+  git:
+    repo: git@github.com:c-mco/dotfiles.git
+    dest: ~/.dotfiles
+
+- name: use stow to symlink dotfiles
+  shell: |
+    stow -t ~ -d ~/.dotfiles git nvim p10k zsh
+
+- name: Clone powerlevel10k
+  git:
+    repo: https://github.com/romkatv/powerlevel10k.git
+    dest: ~/powerlevel10k
+

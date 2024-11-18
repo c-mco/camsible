@@ -1,0 +1,39 @@
+- name: Create ssh folder
+  file:
+    path: ~/.ssh
+    state: directory
+    mode: "0700"
+
+- name: Copy encrypted SSH keys tarball
+  copy:
+    src: ssh_keys.tar.gz
+    dest: ~/ssh_keys.tar.gz
+    mode: "0600"
+
+- name: Unpack SSH keys tarball
+  ansible.builtin.command:
+    cmd: tar xzf ~/ssh_keys.tar.gz -C ~/.ssh
+
+- name: Set permissions for SSH keys
+  file:
+    path: ~/.ssh/id_ed25519
+    mode: "0600"
+
+- name: Ensure known_hosts file has GitHub entry
+  known_hosts:
+    name: github.com
+    key: "{{ lookup('pipe', 'ssh-keyscan github.com') }}"
+
+- name: Configure SSH to use the GitHub key
+  lineinfile:
+    path: ~/.ssh/config
+    create: yes
+    line: |
+      Host github.com
+        IdentityFile ~/.ssh/id_ed25519
+        User git
+
+- name: Start ssh-agent and add SSH key
+  shell: |
+    eval $(ssh-agent -s)
+    ssh-add ~/.ssh/id_ed25519
