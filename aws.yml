@@ -1,0 +1,4 @@
+- name: Install or update aws
+  hosts: localhost
+  roles:
+    - aws

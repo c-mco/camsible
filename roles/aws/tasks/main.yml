@@ -1,0 +1,23 @@
+- name: Download AWS CLI installation script
+  get_url:
+    url: "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+    dest: "/tmp/awscliv2.zip"
+
+- name: Unzip AWS CLI installation package
+  unarchive:
+    src: "/tmp/awscliv2.zip"
+    dest: "/tmp"
+    remote_src: yes
+
+- name: Run AWS CLI installation script
+  become: true
+  command: "/tmp/aws/install --update"
+
+- name: Verify AWS CLI installation
+  command: "aws --version"
+  register: aws_version
+  changed_when: false
+
+- name: Display AWS CLI version
+  debug:
+    msg: "Installed AWS CLI version: {{ aws_version.stdout }}"
